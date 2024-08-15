@@ -1,17 +1,29 @@
 const phoneBook = {
-  'alex': 89944244242,
-  'artem': 89991234242,
-  'andrey': 89410029424,
+  'list': {
+    'alex': 89944244242,
+    'artem': 89991234242,
+    'andrey': 89410029424,
+  },
+  add(name, number) {
+    this.list[name] = number;
+  },
+  del(name) {
+    delete this.list[name];
+  }
 }
 
-console.log('Выводы данных из ТК:');
-console.log(phoneBook.alex);
-console.log(phoneBook['andrey']);
+
+phoneBook.add('New user', 1231323212);
+phoneBook.add('second user', 1332141);
+console.log(phoneBook.list);
 console.log('_______________');
-console.log('Операции с ТК');
-phoneBook['popov'] = 89421231231;
-phoneBook.pepel = 81239422332;
-console.log(phoneBook);
-phoneBook.alex = 89999991234;
-delete phoneBook.artem;
-console.log(phoneBook);
+phoneBook.del('artem');
+console.log(phoneBook.list);
+console.log('alex' in phoneBook.list);
+
+for (const name in phoneBook.list) {
+  console.log(name + ' - ' + phoneBook.list[name]);
+}
+
+
+
