@@ -4,18 +4,18 @@ const list = {
     'second task': 'To Do',
     'eat kasha': 'Done',
   },
-  addTask(nameTask, statusTask) {
-    this.tasks[nameTask] = statusTask;
+  addTask: (nameTask, statusTask) => {
+    list.tasks[nameTask] = statusTask
   },
-  deleteTask(nameTask) {
-    delete this.tasks[nameTask];
+  deleteTask: (nameTask) => {
+    delete list.tasks[nameTask]
   },
-  changeStatus(nameTask, statusTask) {
+  changeStatus: (nameTask, statusTask) => {
     if (nameTask in list.tasks) {
-      this.tasks[nameTask] = statusTask;
+      list.tasks[nameTask] = statusTask;
     }
   },
-  showList() {
+  showList: () => {
     for (const name in list.tasks) {
       console.log(name + ': ' + list.tasks[name]);
     }    
