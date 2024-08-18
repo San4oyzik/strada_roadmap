@@ -1,36 +1,13 @@
-const list = {
-  tasks: {
-    'new task' : 'In progress',
-    'second task': 'To Do',
-    'eat kasha': 'Done',
-  },
-  addTask: (nameTask, statusTask) => {
-    list.tasks[nameTask] = statusTask
-  },
-  deleteTask: (nameTask) => {
-    delete list.tasks[nameTask]
-  },
-  changeStatus: (nameTask, statusTask) => {
-    if (nameTask in list.tasks) {
-      list.tasks[nameTask] = statusTask;
-    }
-  },
-  showList: () => {
-    for (const name in list.tasks) {
-      console.log(name + ': ' + list.tasks[name]);
-    }    
-  }
-};
+const trunscat = (word, maxlength = 7) => {
+  return (word.length > maxlength) ? word.slice(0, maxlength) : word;
+}
 
-list.showList();
-list.addTask('new open task', 'To do');
-list.addTask('drink water', 'Done');
-console.log('add----------');
-list.showList();
-list.deleteTask('new task');
-console.log('del----------');
-list.showList();
-list.changeStatus('second task', 'Done');
-list.changeStatus('new task', 'Todo');
-console.log('change----------');
-list.showList();
+const showVerticalMessage = (word) => {
+  let trunscateWord = trunscat(word);
+  let newWord = trunscateWord[0].toUpperCase() + trunscateWord.slice(1);
+  for (let char of newWord) {
+    console.log(char);
+  }
+}
+
+showVerticalMessage('strada12345')
