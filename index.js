@@ -1,21 +1,26 @@
-const toDoList = ['first task', 'second task', 'eat kasha']
+const list = [1, 2, 3, 4, 5, 6];
 
-const addTask = (nameTask) => {
-  toDoList.push(nameTask);
-}
+list.forEach(number => {
+  console.log(`Number is ${number}`);
+})
 
-const deleteTask = () => {
-  toDoList.pop()
-}
+const animals = ['cat', 'dog', 'elephant', 'tiger', 'lion'];
+const findAnimals = animals.find(animal => animal.length >= 7);
+console.log(findAnimals);
 
-const showList = () => {
-  for (const task of toDoList) {
-    console.log(task);
-  }
-}
+const numbers = [1, 11, -2, 3, -10, 4];
+
+const minusNumbers = numbers.filter(num => num < 0);
+console.log(minusNumbers);
 
 
-addTask('new task');
-showList();
-deleteTask();
-showList();
+const numbersNew = [1, 11, -2, 3, -10, 4];
+
+const newNumberList = numbersNew.map(num => Math.abs(num));
+console.log(newNumberList);
+
+
+const sortNumbers = [1, 11, -2, 3, -10, 4];
+
+const sortedNumbers = sortNumbers.sort((a, b) => b - a);
+console.log(sortedNumbers);
