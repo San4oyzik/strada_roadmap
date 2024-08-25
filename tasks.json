@@ -1,0 +1,29 @@
+{
+  "tasks": [
+    {
+      "name": "first task",
+      "status": "in progress",
+      "priority": "low"
+    },
+    {
+      "name": "second task",
+      "status": "to do",
+      "priority": "low"
+    },
+    {
+      "name": "call Misha",
+      "status": "to do",
+      "priority": "high"
+    },
+    {
+      "name": "do task for strada",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "name": "any task",
+      "status": "to do",
+      "priority": "low"
+    }
+  ]
+}
