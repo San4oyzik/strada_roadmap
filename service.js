@@ -1,7 +1,6 @@
 const list = [
   {name: 'first task', status: 'in progress', priority: 'low'},
   {name: 'second task', status: 'to do', priority: 'high'},
-
 ]
 
 const addTask = (nameTask, statusTask = 'to do', priorityTask = 'low') => {
