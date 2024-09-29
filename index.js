@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const db = require('../strada_roadmap/db')
-const service = require('../strada_roadmap/service');
+// const service = require('../strada_roadmap/service');
 const { ObjectId } = require('mongodb');
-const Task = require('./addTask.js');
+const Task = require('./taskModel.js')
+// const Task = require('./addTask.js');
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -32,9 +33,15 @@ app.get('/tasks', async (req, res) => {
 app.post('/tasks', async (req, res) => {
   try {
     const nameTask = req.body.name;
+    const statusTask = req.body.status;
     const priorityTask = req.body.priority;
-    const task = new Task(nameTask, priorityTask);
-    await db.getDB().collection('tasks').insertOne(task)
+    const task = await Task.create({
+      name: nameTask,
+      status: statusTask,
+      priority: priorityTask,
+    })
+    // const task = new Task(nameTask, priorityTask);
+    // await db.getDB().collection('tasks').insertOne(task)
     res.status(201).json({message: `Task added ${nameTask}`, task});
   } catch (e) {
     console.error(e);
