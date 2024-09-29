@@ -21,8 +21,11 @@ app.get('/', (req, res) => {
 
 app.get('/tasks', async (req, res) => {
   try {
-    const tasks = await Task.find({});
-    // const tasks = await db.getDB().collection('tasks').find({}).toArray();
+    const userId = req.headers.authorization;
+    if (!userId) {
+      res.status(404).send('Error authorization')
+    }
+    const tasks = await Task.find({userId});
     res.status(200).json(tasks)
   } catch (e) {
     console.error(e);
@@ -33,7 +36,6 @@ app.get('/tasks', async (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const tasks = await User.find({});
-    // const tasks = await db.getDB().collection('tasks').find({}).toArray();
     res.status(200).json(tasks)
   } catch (e) {
     console.error(e);
@@ -43,6 +45,10 @@ app.get('/users', async (req, res) => {
 
 app.get('/tasks/:taskId', async (req, res) => {
   try {
+    const userId = req.headers.authorization;
+    if (!userId) {
+      res.status(404).send('Error authorization')
+    }
     const task = await Task.findById(req.params.taskId);
     if (!task) {
       return res.status(404).send('Task not found');
@@ -64,19 +70,21 @@ app.get('/tasks/:taskId', async (req, res) => {
 })
 
 app.post('/tasks/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const authId = req.headers.authorization;
   try {
+    if (userId !== authId) {
+      res.status(404).send('Error authorization')
+    }
     const nameTask = req.body.name;
     const statusTask = req.body.status;
     const priorityTask = req.body.priority;
-    const userId = req.params.userId;
     const task = await Task.create({
       name: nameTask,
       status: statusTask,
       priority: priorityTask,
       userId: new ObjectId(userId)
     })
-    // const task = new Task(nameTask, priorityTask);
-    // await db.getDB().collection('tasks').insertOne(task)
     res.status(201).json({message: `Task added ${nameTask}`, task});
   } catch (e) {
     console.error(e);
@@ -100,11 +108,30 @@ app.post('/users', async (req, res) => {
 
 app.delete('/tasks/:taskId', async (req, res) => {
   try {
+    const userId = req.headers.authorization;
+    if (!userId) {
+      res.status(404).send('Error authorization')
+    }
     const taskId = req.params.taskId;
-    await db.getDB().collection('tasks').deleteOne({
+    await Task.deleteOne({
       _id: new ObjectId(taskId)
     })
-    await res.send(`задача ${taskId} удалена`)
+    await res.send(`Задача ${taskId} удалена`)
+  } catch (e) {
+    console.error(e);
+  }
+})
+
+app.delete('/users/', async (req, res) => {
+  try {
+    const userId = req.headers.authorization;
+    if (!userId) {
+      res.status(404).send('Error authorization')
+    }
+    await User.deleteOne({
+      _id: new ObjectId(userId)
+    })
+    await res.send(`Пользователь ${userId} удалена`)
   } catch (e) {
     console.error(e);
   }
