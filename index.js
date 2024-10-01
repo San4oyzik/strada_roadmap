@@ -5,7 +5,7 @@ const db = require('../strada_roadmap/db')
 const { ObjectId } = require('mongodb');
 const Task = require('./taskModel.js');
 const User = require('./userModel.js');
-const { createTask, deleteTask, getAllTask } = require('./taskService.js');
+const { createTask, deleteTask, getAllTask, createSubtask, deleteSubtask } = require('./taskService.js');
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -92,6 +92,20 @@ app.post('/tasks/:userId', async (req, res) => {
   }
 })
 
+app.post('/tasks/:taskId/subtasks', async (req, res) => {
+  const taskId = req.params.taskId;
+  const nameSubtask = req.body.name;
+  try {
+    if (userId !== authId) {
+      res.status(404).send('Error authorization')
+    }
+    const task = await createSubtask(taskId, {nameSubtask});
+    res.status(201).json({message: `Task added ${nameTask}`, task});
+  } catch (e) {
+    console.error(e);
+  }
+})
+
 app.post('/users', async (req, res) => {
   const userName = req.body.name;
   const userEmail = req.body.email;
@@ -115,6 +129,17 @@ app.delete('/tasks/:taskId', async (req, res) => {
       res.status(404).send('Error authorization')
     }
     await deleteTask(taskId);
+    await res.send(`Задача ${taskId} удалена`)
+  } catch (e) {
+    console.error(e);
+  }
+})
+
+app.delete('/tasks/:taskId/subtasks/:subtasksid', async (req, res) => {
+  const taskId = req.params.taskId;
+  const subtaskId = req.params.subtasksid;
+  try {
+    await deleteSubtask(taskId, subtaskId);
     await res.send(`Задача ${taskId} удалена`)
   } catch (e) {
     console.error(e);
