@@ -9,4 +9,6 @@ const PRIORITY = {
   HIGH: 'high'
 }
 
-module.exports = {STATUS, PRIORITY}
+const DEADLINE_DATE = new Date('2024-12-31')
+
+module.exports = {STATUS, PRIORITY, DEADLINE_DATE}
