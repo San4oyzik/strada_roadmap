@@ -5,6 +5,7 @@ const db = require('../strada_roadmap/db')
 const { ObjectId } = require('mongodb');
 const Task = require('./taskModel.js');
 const User = require('./userModel.js');
+const Project = require('./projectModel.js');
 const { createTask, deleteTask, getAllTask, createSubtask, deleteSubtask } = require('./taskService.js');
 app.use(express.json())
 
@@ -40,7 +41,7 @@ app.get('/users', async (req, res) => {
     res.status(200).json(tasks)
   } catch (e) {
     console.error(e);
-    res.status(500).send('Error retrieving tasks');
+    res.status(500).send('Error retrieving users');
   }
 })
 
@@ -70,6 +71,21 @@ app.get('/tasks/:taskId', async (req, res) => {
   }
 })
 
+app.get('/projects/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const authId = req.headers.authorization;
+  try {
+    if (userId !== authId) {
+      res.status(404).send('Error authorization')
+    }
+    const projects = await Project.find({});
+    res.status(200).json(projects);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('Error retrieving projects');
+  }
+})
+
 app.post('/tasks/:userId', async (req, res) => {
   const userId = req.params.userId;
   const authId = req.headers.authorization;
@@ -91,6 +107,7 @@ app.post('/tasks/:userId', async (req, res) => {
     console.error(e);
   }
 })
+
 
 app.post('/tasks/:taskId/subtasks', async (req, res) => {
   const taskId = req.params.taskId;
@@ -115,6 +132,26 @@ app.post('/users', async (req, res) => {
       email: userEmail,
     })
     res.status(201).json({message: `User added ${userName}`, user});
+  } catch (e) {
+    console.error(e);
+  }
+})
+
+app.post('/projects/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const authId = req.headers.authorization;
+  const projectName = req.body.name;
+  const descProject = req.body.description;
+  try {
+    if (userId !== authId) {
+      res.status(404).send('Error authorization')
+    }
+    const project = await Project.create({
+      name: projectName,
+      description: descProject,
+      userId: userId,
+    })
+    res.status(201).json({message: `Project added ${project.name}`, project})
   } catch (e) {
     console.error(e);
   }
@@ -156,6 +193,23 @@ app.delete('/users/', async (req, res) => {
       _id: new ObjectId(userId)
     })
     await res.send(`Пользователь ${userId} удалена`)
+  } catch (e) {
+    console.error(e);
+  }
+})
+
+app.delete('/projects/:projectId/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const authId = req.headers.authorization;
+  const projectId = req.params.projectId;
+  try {
+    if (userId !== authId) {
+      res.status(404).send('Error authorization')
+    }
+    await Project.deleteOne({
+      _id: new ObjectId(projectId)
+    })
+    await res.send(`Проект ${projectId} удален`)
   } catch (e) {
     console.error(e);
   }

@@ -10,7 +10,8 @@ const taskSchema = new mongoose.Schema({
         nameSubtask: String,
         statusSubtask: String
       }
-    ]
+    ],
+    projectId: { type: 'ObjectId', ref: 'Project' }
 });
 
 const Task = mongoose.model('Task', taskSchema);

@@ -32,8 +32,8 @@ const updateTask = async (taskId, {name, status, priority, deadline}) => {
 )
 }
 
-const getAllTask = async (userId) => {
-  return await Task.find({userId});
+const getAllTask = async (authId) => {
+  return await Task.find({userId: authId}.populate('userId'));
 }
 
 const createSubtask = async (taskId, {nameSubtask, statusSubtask = STATUS.TO_DO}) => {
