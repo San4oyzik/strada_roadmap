@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Movie, MovieDocument } from './movie.schema';
 
 @Injectable()
 export class MovieService {
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  constructor(
+    @InjectModel(Movie.name) private movieModel: Model<MovieDocument>,
+  ) {}
+
+  async create(createMovieDto: CreateMovieDto): Promise<Movie> {
+    const createdMovie = await new this.movieModel(createMovieDto);
+    return createdMovie.save();
   }
 
   findAll() {
@@ -13,15 +21,27 @@ export class MovieService {
     return allFilms;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} movie`;
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+    const updatedMovie = await this.movieModel
+      .findByIdAndUpdate(id, updateMovieDto, { new: true })
+      .exec();
+
+    if (!updatedMovie) {
+      throw new NotFoundException(`Movie with ID "${id}" not found`);
+    }
+
+    return updatedMovie;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(id: string): Promise<Movie> {
+    const deletedMovie = await this.movieModel.findByIdAndDelete(id).exec();
+    if (!deletedMovie) {
+      throw new NotFoundException(`Movie with ID "${id}" not found`);
+    }
+    return deletedMovie;
   }
 }
